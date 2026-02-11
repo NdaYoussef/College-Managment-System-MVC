@@ -16,7 +16,6 @@ namespace UniManagementSystem.Application.DTOs.UserDtos
         [Required, MaxLength(50)]
         public string? LastName { get; set; }
 
-        public string? UserName => $"{FirstName} {LastName}";
         [Required]
         [EmailAddress]
         public string? Email { get; set; }
@@ -35,7 +34,7 @@ namespace UniManagementSystem.Application.DTOs.UserDtos
         [Display(Name = "National ID")]
 
         public string NationalID { get; set; }
-        public string? Address { get; set; }
+    //    public string? Address { get; set; }
      //   public string? PhoneNumber { get; set; }
         public string Gender { get; set; }  
 

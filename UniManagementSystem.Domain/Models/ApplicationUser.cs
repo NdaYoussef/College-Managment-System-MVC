@@ -13,35 +13,75 @@ namespace UniManagementSystem.Domain.Models
 
         [Required, MaxLength(50)]
         public string LastName { get; set; }
+        public string UserName => $"{FirstName}{LastName}";
+
         [MaxLength(250)]
         public string? Address { get; set; }
         public string Gender { get; set; }
 
         public string? ProfilePic { get; set; }
         [MaxLength(20)]
-        public string NationalID { get; set; }
-        public DateTime? DateOfBirth
-        { 
-            
-           get
+        //public string NationalID { get; set; }
+
+        //[NotMapped]
+        //public DateTime? DateOfBirth
+        //{ 
+
+        //   get
+        //    {
+        //        if (string.IsNullOrEmpty(NationalID) || NationalID.Length != 14)
+        //            return null;
+        //        if (!int.TryParse(NationalID.Substring(1, 2), out int year)
+        //            || !int.TryParse(NationalID.Substring(3, 2), out int month)
+        //            || int.TryParse(NationalID.Substring(5, 2), out int day))
+        //        return null;
+
+        //        int century = NationalID[0] == '2' ? 1900 :
+        //                      NationalID[1] == '3' ?2000: 0;
+
+        //        if(century ==0)
+        //            return null;
+        //        if (!DateTime.TryParse($"{century + year}-{month}-{day}", out DateTime dob))
+        //            return null;
+        //        return dob;
+        //    }
+        //} 
+        private DateTime? _dateOfBirth;
+
+        private string _nationalId;
+        public string NationalID
+        {
+            get => _nationalId;
+            set
             {
-                if (string.IsNullOrEmpty(NationalID) || NationalID.Length != 14)
-                    return null;
-                if (!int.TryParse(NationalID.Substring(1, 2), out int year)
-                    || !int.TryParse(NationalID.Substring(3, 2), out int month)
-                    || int.TryParse(NationalID.Substring(5, 2), out int day)) ;
+                _nationalId = value;
+                _dateOfBirth = ExtractDate(value);
+            }
+        }
+
+        public DateTime? DateOfBirth
+        {
+            get => _dateOfBirth;
+            set => _dateOfBirth = value;
+        }
+        private DateTime? ExtractDate(string id)
+        {
+            if (string.IsNullOrEmpty(id) || id.Length != 14) return null;
+            if (!int.TryParse(id.Substring(1, 2), out int year) ||
+                !int.TryParse(id.Substring(3, 2), out int month) ||
+                !int.TryParse(id.Substring(5, 2), out int day))
                 return null;
 
-                int century = NationalID[0] == '2' ? 1900 :
-                              NationalID[1] == '3' ?2000: 0;
+            int century = id[0] == '2' ? 1900 :
+                          id[0] == '3' ? 2000 : 0;
 
-                if(century ==0)
-                    return null;
-                if (!DateTime.TryParse($"{century + year}-{month}-{day}", out DateTime dob))
-                    return null;
-                return dob;
-            }
-        } 
+            if (century == 0) return null;
+
+            if (!DateTime.TryParse($"{century + year}-{month}-{day}", out DateTime dob))
+                return null;
+
+            return dob;
+        }
         public double? GPA { get; set; }
         public Roles Role { get; set; }
         public decimal? Salary { get; set; }

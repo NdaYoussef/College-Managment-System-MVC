@@ -44,22 +44,22 @@ namespace UniManagementSystem.Application.Services
         {
             if (await _userManager.FindByEmailAsync(registerDto.Email) is not null)
                 return new AuthDto { Message = "Email is already Registered!" };
-            if (await _userManager.FindByNameAsync(registerDto.UserName) is not null)
-                return new AuthDto { Message = "UserName is already Registered!" };
+            //if (await _userManager.FindByNameAsync(registerDto.UserName) is not null)
+            //    return new AuthDto { Message = "UserName is already Registered!" };
 
             var user = new ApplicationUser
             {
-                UserName = registerDto.UserName,
+                //UserName = registerDto.UserName,
                 FirstName = registerDto.FirstName,
                 LastName = registerDto.LastName,
                 Email = registerDto.Email,
                 NationalID = registerDto.NationalID,
-                Address = registerDto.Address,
-                PhoneNumber = registerDto.PhoneNumber,
+            //    Address = registerDto.Address,
+            //    PhoneNumber = registerDto.PhoneNumber,
                 Gender = registerDto.Gender,
-                DateOfBirth = registerDto.DateOfBirth,
+            //    DateOfBirth = registerDto.DateOfBirth,
             };
-
+            await _userManager.SetUserNameAsync(user,user.UserName);
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded)
             {
@@ -76,7 +76,8 @@ namespace UniManagementSystem.Application.Services
                 var roleResult = await _roleManager.CreateAsync(new IdentityRole(roleName));
                 if (!roleResult.Succeeded)
                 {
-                    await _userManager.DeleteAsync(user);
+                   // await _userManager.DeleteAsync(user);
+                   user.IsDeleted = true;
                     return new AuthDto
                     {
                         Message = "Something gets wrong, try, again later,",
@@ -87,9 +88,19 @@ namespace UniManagementSystem.Application.Services
             var newResult = await _userManager.AddToRoleAsync(user, roleName);
             if (!newResult.Succeeded)
             {
-                var error = string.Join(" ", newResult.Errors.Select(e => e.Description));
+                //var error = string.Join(" ", newResult.Errors.Select(e => e.Description));
+                //return new AuthDto
+                //{
+                //    IsAuthenticated = false,
+                //    Message = $"Failed to assign role: {error}",
+                //};
+               var error =  new IdentityError
+                {
+                    Description = $"{newResult.Errors}"
+                };
                 return new AuthDto
                 {
+
                     IsAuthenticated = false,
                     Message = $"Failed to assign role: {error}",
                 };
