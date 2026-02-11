@@ -8,8 +8,6 @@ namespace UniManagementSystem.Domain.Models
 {
     public class ApplicationUser : IdentityUser
     {
-    
-
         [Required, MaxLength(50)]
         public string FirstName { get; set; }
 
@@ -22,7 +20,28 @@ namespace UniManagementSystem.Domain.Models
         public string? ProfilePic { get; set; }
         [MaxLength(20)]
         public string NationalID { get; set; }
-        public DateTime DateOfBirth { get; set; } //= DateTime.UtcNow;
+        public DateTime? DateOfBirth
+        { 
+            
+           get
+            {
+                if (string.IsNullOrEmpty(NationalID) || NationalID.Length != 14)
+                    return null;
+                if (!int.TryParse(NationalID.Substring(1, 2), out int year)
+                    || !int.TryParse(NationalID.Substring(3, 2), out int month)
+                    || int.TryParse(NationalID.Substring(5, 2), out int day)) ;
+                return null;
+
+                int century = NationalID[0] == '2' ? 1900 :
+                              NationalID[1] == '3' ?2000: 0;
+
+                if(century ==0)
+                    return null;
+                if (!DateTime.TryParse($"{century + year}-{month}-{day}", out DateTime dob))
+                    return null;
+                return dob;
+            }
+        } 
         public double? GPA { get; set; }
         public Roles Role { get; set; }
         public decimal? Salary { get; set; }
