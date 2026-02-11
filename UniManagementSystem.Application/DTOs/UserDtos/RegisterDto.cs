@@ -15,8 +15,8 @@ namespace UniManagementSystem.Application.DTOs.UserDtos
 
         [Required, MaxLength(50)]
         public string? LastName { get; set; }
-       
-        public string? UserName { get; set; }
+
+        public string? UserName => $"{FirstName} {LastName}";
         [Required]
         [EmailAddress]
         public string? Email { get; set; }
@@ -25,6 +25,7 @@ namespace UniManagementSystem.Application.DTOs.UserDtos
         [StringLength(20, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 20 characters")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
         [Required(ErrorMessage = "Please confirm your password")]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Passwords do not match")]
@@ -35,10 +36,10 @@ namespace UniManagementSystem.Application.DTOs.UserDtos
 
         public string NationalID { get; set; }
         public string? Address { get; set; }
-        public string? PhoneNumber { get; set; }
+     //   public string? PhoneNumber { get; set; }
         public string Gender { get; set; }  
 
-        public DateTime DateOfBirth { get; set; }
+       // public DateTime DateOfBirth => 
 
         [Display(Name ="Person Type")]
         public Roles Role { get; set; }
