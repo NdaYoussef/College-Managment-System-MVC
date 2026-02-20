@@ -1,83 +1,197 @@
-﻿@using UniManagementSystem.Application.DTOs.UserDtos
+@using UniManagementSystem.Application.DTOs.UserDtos
 @model LoginDto
 
 @{
     ViewData["Title"] = "Login";
+    // Layout = null;
 }
-<link rel="stylesheet" href="~/css/account/login.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-<div class="login-container">
-    <div class="login-card">
-        <h2>Welcome Back</h2>
-        <p>Please sign in to your account</p>
+<!DOCTYPE html>
+<html lang="en">
 
-        @if (!ViewData.ModelState.IsValid)
-        {
-            <div class="alert alert-danger">
-                @Html.ValidationSummary(true)
-            </div>
-        }
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Login - Learner</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
 
-        <!-- التعديل هنا: غيري SaveLogin لـ Login -->
-        <form asp-action="SaveLogin" method="post" class="login-form">
-            @Html.AntiForgeryToken()
+    <!-- Favicons -->
+    <link href="~/assets/img/learner.png" rel="image/png">
 
-            <div class="form-group">
-                <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" placeholder="Enter your email" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
 
-            <div class="form-group">
-                <label asp-for="Password"></label>
-                <div class="input-group">
-                    <input asp-for="Password" type="password" class="form-control password-input" placeholder="Enter your password" />
-                    <button type="button" class="btn btn-outline-secondary toggle-password" data-target="#Password" aria-label="Toggle password">
-                        <i class="bi bi-eye"></i>
-                    </button>
+    <!-- Vendor CSS Files -->
+    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/assets/vendor/aos/aos.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="~/assets/css/main.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/account/login.css" />
+</head>
+
+<body class="login-page">
+
+    <header id="header" class="header d-flex align-items-center sticky-top">
+        <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+            <!-- Logo -->
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="logo d-flex align-items-center me-auto">
+                <h1 class="sitename">Learner</h1>
+            </a>
+
+            <!-- Navigation Bar -->
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li>
+                        <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Home" asp-action="About">About</a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                    </li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+
+            <!-- Button -->
+            <a class="btn-getstarted" asp-controller="Account" asp-action="Login">Login</a>
+
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="auth-section section">
+            <div class="container">
+                <div class="row justify-content-center align-items-center min-vh-100 py-5">
+                    <div class="col-lg-5 col-md-7" data-aos="fade-up" data-aos-delay="100">
+                        <div class="auth-card">
+                            <div class="auth-card-header">
+                                <h2>Welcome Back</h2>
+                                <p>Please sign in to your account</p>
+                            </div>
+
+                            @if (TempData["ErrorMessage"] != null)
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                    @TempData["ErrorMessage"]
+                                </div>
+                            }
+
+                            @if (TempData["SuccessMessage"] != null)
+                            {
+                                <div class="alert alert-success" role="alert">
+                                    <i class="bi bi-check-circle-fill me-2"></i>
+                                    @TempData["SuccessMessage"]
+                                </div>
+                            }
+
+                            @if (!ViewData.ModelState.IsValid)
+                            {
+                                <div class="alert alert-danger">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                </div>
+                            }
+
+                            <form asp-action="SaveLogin" method="post" class="auth-form">
+                                @Html.AntiForgeryToken()
+
+                                <div class="form-group">
+                                    <label asp-for="Email" class="form-label">
+                                        <i class="bi bi-envelope me-2"></i>Email Address
+                                    </label>
+                                    <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label asp-for="Password" class="form-label">
+                                        <i class="bi bi-lock me-2"></i>Password
+                                    </label>
+                                    <div class="password-input-wrapper">
+                                        <input asp-for="Password" type="password" class="form-control password-input" placeholder="Enter your password" id="Password" />
+                                        <button type="button" class="btn-toggle-password" aria-label="Toggle password visibility">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100 mt-4">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                                </button>
+                            </form>
+
+                            <div class="auth-card-footer">
+                                <p class="text-center mb-0">
+                                    Don't have an account? 
+                                    <a asp-action="Register" asp-controller="Account" class="auth-link">Register here</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
+        </section>
+    </main>
 
-            <button type="submit" class="btn btn-primary w-100 mt-3">Login</button>
-        </form>
+    <!-- Vendor JS Files -->
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/vendor/aos/aos.js"></script>
 
-        <p class="register-link mt-3">
-            Don't have an account? <a asp-action="Register" asp-controller="Account">Register here</a>
-        </p>
-    </div>
-</div>
+    <!-- Main JS File -->
+    <script src="~/assets/js/main.js"></script>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <!-- Validation Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
 
     <script>
-        // toggle password visibility for .toggle-password
-        document.querySelectorAll('.toggle-password').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                var targetSelector = btn.getAttribute('data-target');
-                var input = document.querySelector(targetSelector);
-                if (!input) return;
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
 
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    btn.innerHTML = '<i class="bi bi-eye-slash"></i>';
+        // Toggle password visibility
+        document.querySelectorAll('.btn-toggle-password').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const passwordInput = this.previousElementSibling;
+                const icon = this.querySelector('i');
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.classList.remove('bi-eye');
+                    icon.classList.add('bi-eye-slash');
                 } else {
-                    input.type = 'password';
-                    btn.innerHTML = '<i class="bi bi-eye"></i>';
+                    passwordInput.type = 'password';
+                    icon.classList.remove('bi-eye-slash');
+                    icon.classList.add('bi-eye');
                 }
             });
         });
     </script>
 
-    <style>
-        .input-group .toggle-password {
-            border-left: 0;
-        }
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-        .password-input {
-            padding-right: 0.5rem;
-        }
-    </style>
-}
+    <!-- Preloader -->
+    <div id="preloader"></div>
+
+</body>
+</html>
