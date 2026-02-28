@@ -1,0 +1,66 @@
+﻿@model UniManagementSystem.Application.DTOs.DashboardDtos.StudentDashboardDto
+
+@{
+    ViewData["Title"] = "Student Dashboard";
+}
+
+@if (Model != null && Model.StudentInfo != null)
+{
+    <h1>Welcome, @Model.StudentInfo.Name</h1>
+    <p>Email: @Model.StudentInfo.Email</p>
+    <p>Department: @Model.StudentInfo.Department</p>
+    <p>GPA: @Model.StudentInfo.GPA</p>
+
+    <h2>Courses (@Model.TotalCourses)</h2>
+    @if (Model.Courses != null && Model.Courses.Any())
+    {
+        <ul>
+            @foreach (var course in Model.Courses)
+            {
+                <li>@course.Name (@course.Code) - @course.Department</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No courses enrolled.</p>
+    }
+
+    <h2>Upcoming Schedules (@Model.UpcomingSchedules)</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Course</th>
+                <th>Day</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Lecturer</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Schedules != null && Model.Schedules.Any())
+            {
+                @foreach (var sched in Model.Schedules)
+                {
+                    <tr>
+                        <td>@sched.CourseName</td>
+                        <td>@sched.Day</td>
+                        <td>@sched.StartTime</td>
+                        <td>@sched.EndTime</td>
+                        <td>@sched.Lecturer</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">No upcoming schedules.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Student dashboard data is not available.</p>
+}

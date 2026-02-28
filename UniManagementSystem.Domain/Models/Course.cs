@@ -16,11 +16,11 @@ namespace UniManagementSystem.Domain.Models
         public string Code { get; set; }
         public Department Department { get; set; }
         [ForeignKey("Department")]
-        public int DepartmentId { get; set; }
+        public int? DepartmentId { get; set; }
 
 
-        public ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
-        public ICollection<UserCourse> UserCourses { get; set; } = new List<UserCourse>();
+        public ICollection<Schedule>? Schedules { get; set; } = new List<Schedule>();
+        public ICollection<UserCourse>? UserCourses { get; set; } = new List<UserCourse>();
 
     }
 }

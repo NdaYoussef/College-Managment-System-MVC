@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using UniManagementSystem.Application.DTOs.DashboardDtos;
 using UniManagementSystem.Application.Interfaces;
+using UniManagementSystem.Domain.Models;
 
 namespace UniManagementSystem.MVC.Controllers
 {
@@ -29,51 +31,104 @@ namespace UniManagementSystem.MVC.Controllers
             return userRole?.ToLower() switch
             {
                 "admin" => RedirectToAction("Admin"),
-                "lecturere" => RedirectToAction("Lecturer"),
+                "lecturer" => RedirectToAction("Lecturer"),
                 "student" =>RedirectToAction("Student"),
                 _ => RedirectToAction("Unauthorized")
             };
         }
 
-        [Authorize(Roles ="Admin")]
+
+        // Admin Dashboard
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Admin()
         {
             var result = await _dashboardService.GetAdminDashboardData();
-            if (!result.IsAuthenticated)
+
+            if (!result.IsAuthenticated || result.Data == null)
             {
-                TempData["Error"] = result.Message;
-                return View("Error");
+                TempData["Error"] = result?.Message ?? "Failed to load admin dashboard.";
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = HttpContext.TraceIdentifier
+                });
             }
 
-             return View("Admin", result.Data);
+            var model = result.Data as AdminDashboardDto;
+            if (model == null)
+            {
+                TempData["Error"] = "Invalid admin dashboard data.";
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = HttpContext.TraceIdentifier
+                });
+            }
+
+            return View("Admin", model);
         }
 
+
+
+        // Lecturer Dashboard
         [Authorize(Roles = "Lecturer")]
         public async Task<IActionResult> Lecturer()
         {
-            var lecturereId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var result = await _dashboardService.GetLecturerDashboardDataAsync(lecturereId);
+            var lecturerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(lecturerId))
+                return RedirectToAction("Login", "Account");
 
-            if (!result.IsAuthenticated)
+            var result = await _dashboardService.GetLecturerDashboardDataAsync(lecturerId);
+
+            if (!result.IsAuthenticated || result.Data == null)
             {
-                TempData["Error"] = result.Message;
-                return View("Error");
+                TempData["Error"] = result?.Message ?? "Failed to load lecturer dashboard.";
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = HttpContext.TraceIdentifier
+                });
             }
-            return View("LecturerDashboard", result.Data);  
+
+            var model = result.Data as LecturerDashboardDto;
+            if (model == null)
+            {
+                TempData["Error"] = "Invalid lecturer dashboard data.";
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = HttpContext.TraceIdentifier
+                });
+            }
+
+            return View("Lecturer", model);
         }
 
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> Student()
         {
             var studentId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(studentId))
+                return RedirectToAction("Login", "Account");
+
             var result = await _dashboardService.GetStudentDashboardDataAsync(studentId);
 
-            if(!result.IsAuthenticated)
+            if (!result.IsAuthenticated || result.Data == null)
             {
-                TempData["Error"] = result.Message;
-                return View("Error");
+                TempData["Error"] = result?.Message ?? "Failed to load student dashboard.";
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = HttpContext.TraceIdentifier
+                });
             }
-            return View("StudentDashboard", result.Data);
+
+            var model = result.Data as UniManagementSystem.Application.DTOs.DashboardDtos.StudentDashboardDto;
+            if (model == null)
+            {
+                TempData["Error"] = "Invalid student dashboard data.";
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = HttpContext.TraceIdentifier
+                });
+            }
+
+            return View("Student", model);
         }
 
         public IActionResult Unauthorized()

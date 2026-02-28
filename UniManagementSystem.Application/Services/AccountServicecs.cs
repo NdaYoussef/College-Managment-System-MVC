@@ -60,6 +60,7 @@ namespace UniManagementSystem.Application.Services
             //    DateOfBirth = registerDto.DateOfBirth,
             };
             await _userManager.SetUserNameAsync(user,user.UserName);
+           // user.UserName = $"{registerDto.FirstName}{registerDto.LastName}".Replace(" ","");
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded)
             {
@@ -133,7 +134,15 @@ namespace UniManagementSystem.Application.Services
                 authModel.IsAuthenticated = true;
                 authModel.Email = user.Email;
                 authModel.UserName = user.UserName;
-                authModel.Roles = roles; 
+                authModel.Roles = roles;
+                authModel.RedirectUrl = roles.FirstOrDefault() switch
+                {
+                    "Admin" => "/Dashboard/Admin",
+                    "Lecturer" => "/Dashboard/Lecturer",
+                    "Student" => "/Dashboard/Student",
+                    _ => "/Home/Index"
+                };
+
             }
 
             if(user.RefreshTokens!= null && user.RefreshTokens.Any(t=>t.IsActive))

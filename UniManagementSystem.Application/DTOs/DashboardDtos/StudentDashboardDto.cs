@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace UniManagementSystem.Application.DTOs.DashboardDtos
 {
-    internal class StudentDashboardDto
+    public class StudentDashboardDto
     {
+        public StudentInfoDto StudentInfo { get; set; } = new StudentInfoDto();
+        public int TotalCourses { get; set; }
+        public List<CourseDto> Courses { get; set; } = new List<CourseDto>();
+        public int UpcomingSchedules { get; set; }
+        public List<ScheduleDtos> Schedules { get; set; } = new List<ScheduleDtos>();
     }
 }

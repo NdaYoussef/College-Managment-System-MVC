@@ -38,11 +38,16 @@ namespace UniManagementSystem.MVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("Register", model);
             }
             var result = await _accountService.RegisterAsync(model);
+            if(!result.IsAuthenticated)
+            {
+                TempData["ErrorMessage"] = result.Message;
+                return View("Register", model); 
+            }
             TempData["SuccessMessage"] = "Registration successful!";
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
 
@@ -57,27 +62,20 @@ namespace UniManagementSystem.MVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("Login", model);
             }
 
             var result = await _accountService.LoginAsync(model);
             if (!result.IsAuthenticated)
             {
                 TempData["ErrorMessage"] = result.Message;
-                return View(model);
+                return View("Login",model);
             }
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            var roles = await _userManager.GetRolesAsync(user!);
-            Console.WriteLine($"User roles: {string.Join(", ", roles)}");
-            TempData["SuccessMessage"] = "Login successful!";
-            return roles.FirstOrDefault() switch
-            {
-                "Admin" => RedirectToAction("Admin", "Dashboard"),
-                "Lecturer" => RedirectToAction("Lecturer", "Dashboard"),
-                "Student" => RedirectToAction("Student", "Dashboard"),
-                _ => RedirectToAction("Index", "Home")
-            };
+           //check model role
+            Console.WriteLine($"User roles: {string.Join(", ", model.Role)}");
+        
+            return Redirect(result.RedirectUrl);
         }
 
        

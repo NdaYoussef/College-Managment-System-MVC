@@ -21,5 +21,7 @@ namespace UniManagementSystem.Application.DTOs
         [JsonIgnore]
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiration { get; set; }
+
+        public string RedirectUrl { get; set; } 
     }
 }

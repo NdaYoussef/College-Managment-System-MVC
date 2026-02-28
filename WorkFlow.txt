@@ -1,0 +1,51 @@
+1- 
+Browser → GET /Account/Login
+       ← AccountController.Login() بيرجع View فاضية
+2- 
+Browser → POST /Account/SaveLogin (email + password)
+
+3-
+SaveLogin(LoginDto model)
+    │
+    ├─ ModelState valid? ──NO──→ return View("Login", model) ❌ رجوع للفورم
+    │
+    ├─ _accountService.LoginAsync(model)
+    │       │
+    │       ├─ بيدور على اليوزر في DB
+    │       ├─ بيتحقق من الباسورد
+    │       ├─ بيعمل SignIn (Cookie)
+    │       └─ بيرجع AuthResult { IsAuthenticated, Message }
+    │
+    ├─ IsAuthenticated = false? ──→ TempData Error + return View("Login") ❌
+    │
+    ├─ FindByEmail → get User
+    ├─ GetRolesAsync → ["Admin" / "Lecturer" / "Student"]
+    │
+    └─ Switch على الـ Role:
+            ├─ Admin    → Redirect → Dashboard/Admin
+            ├─ Lecturer → Redirect → Dashboard/Lecturer
+            └─ Student  → Redirect → Dashboard/Student
+
+4-
+GET /Dashboard/Admin  (مثلاً)
+    │
+    ├─ [Authorize(Roles = "Admin")] ✅ عنده Cookie من الـ SignIn
+    │
+    ├─ _dashboardService.GetAdminDashboardData()
+    │       └─ بيجيب البيانات من DB
+    │
+    ├─ result.IsAuthenticated && result.Data != null?
+    │       └─ NO → return View("Error", new ErrorViewModel{...}) ❌
+    │
+    ├─ Cast → AdminDashboardDto
+    │
+    └─ return View("Admin", model) ✅
+
+    5- 
+    Login ناجح
+    └─ SignInManager.SignInAsync()
+            └─ بيعمل Cookie في الـ Browser
+                    └─ كل Request جديد بيبعت الـ Cookie
+                            └─ ASP.NET بيقرأها ويعبي User.Claims
+                                    ├─ ClaimTypes.NameIdentifier = UserId
+                                    └─ ClaimTypes.Role = "Admin"

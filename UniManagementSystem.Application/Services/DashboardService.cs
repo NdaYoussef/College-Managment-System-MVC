@@ -23,7 +23,7 @@ namespace UniManagementSystem.Application.Services
         }
         public async Task<AuthDto> GetAdminDashboardData()
         {
-           var totalStudents = await _context.Users.CountAsync(u=>u.Role ==Roles.Student);
+            var totalStudents = await _context.Users.CountAsync(u=>u.Role ==Roles.Student);
             var totalLecturers = await _context.Users.CountAsync(l => l.Role == Roles.Lecturer);
             var totalCourses = await _context.Courses.CountAsync();
 
@@ -33,10 +33,10 @@ namespace UniManagementSystem.Application.Services
             var recentNotifications = await _context.Notifications
                                                     .OrderByDescending(n=>n.CreatedAt)
                                                     .Take(5)
-                                                    .Select(n=> new
+                                                    .Select(n=> new NotificationDto
                                                     {
-                                                        n.Message,
-                                                        n.CreatedAt,                                
+                                                       Message =  n.Message,
+                                                        CreatedAt = n.CreatedAt,                                
                                                     })
                                                     .ToListAsync();
 
@@ -47,11 +47,7 @@ namespace UniManagementSystem.Application.Services
                 TotalCourses = totalCourses,
                 TotalDepartments = totalDepartments,
                 TotalFees = totalFees,
-                RecentNotifications = (List<NotificationDto>)recentNotifications.Select(n => new
-                {
-                    n.Message,
-                    n.CreatedAt
-                }),
+                RecentNotifications =recentNotifications,
                 SystemState = new SystemStateDto
                 {
                     TotalUsers = totalStudents + totalLecturers,
@@ -137,17 +133,25 @@ namespace UniManagementSystem.Application.Services
                                                     .OrderBy(s => s.Day)
                                                     .ThenBy(s => s.StartTime)
                                                     .Take(5)
-                                                    .Select(s => new
+                                                    .Select(s => new 
                                                     {
                                                         CourseName = s.Course.Name,
                                                         Day = s.Day.ToString(),
                                                         StartTime = s.StartTime.ToString(@"hh\:mm"),
                                                         EndTime = s.EndTime.ToString(@"hh\:mm"),
                                                         Lecturer = $"{s.Lecturer.FirstName} {s.Lecturer.LastName}"
-
                                                     }).ToListAsync();
 
-            var studentDashboard = new
+        //{
+        //    CourseName = s.Course.Name,
+        //    Day = s.Day.ToString(),
+        //    StartTime = s.StartTime.ToString(@"hh\:mm"),
+        //    EndTime = s.EndTime.ToString(@"hh\:mm"),
+        //    Lecturer = $"{s.Lecturer.FirstName} {s.Lecturer.LastName}"
+
+        //}).ToListAsync();
+
+        var studentDashboard = new
             {
                 StudentInfo = new
                 {

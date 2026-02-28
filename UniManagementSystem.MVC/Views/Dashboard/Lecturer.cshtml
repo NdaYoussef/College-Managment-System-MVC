@@ -1,0 +1,49 @@
+﻿@model UniManagementSystem.Application.DTOs.DashboardDtos.LecturerDashboardDto
+
+@{
+    ViewData["Title"] = "Lecturer Dashboard";
+}
+
+<link rel="stylesheet" href="~/css/Lecturer.css" />
+
+<div class="dashboard-layout dashboard-lecturer">
+    <aside class="dashboard-sidebar">
+        <div class="dashboard-logo">Learner Lecturer</div>
+        <nav class="dashboard-nav">
+            <a asp-controller="Dashboard" asp-action="Lecturer" class="active"><i class="bi bi-speedometer2"></i> Overview</a>
+            <a asp-controller="Courses" asp-action="Index"><i class="bi bi-journal-bookmark"></i> Courses</a>
+        </nav>
+    </aside>
+
+    <main class="dashboard-main">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Lecturer Dashboard</h1>
+            <span class="dashboard-role-badge">Lecturer</span>
+        </div>
+
+        <div class="card-accent">
+            <h5>System Stats</h5>
+            <p>Server Uptime: @Model.SystemState.ServerUptime</p>
+            <p>Active Users: @Model.SystemState.ActiveUsers</p>
+            <p>Database Status: @Model.SystemState.DatabaseStatus</p>
+        </div>
+
+        <div class="card-accent">
+            <h5>My Courses (@Model.TotalCourses)</h5>
+            <p>Total Students: @Model.TotalStudents</p>
+            <ul>
+                @if (Model.Courses != null && Model.Courses.Any())
+                {
+                    @foreach (var course in Model.Courses)
+                    {
+                        <li>@course.Name (@course.Code) - @course.Department</li>
+                    }
+                }
+                else
+                {
+                    <li>No courses assigned.</li>
+                }
+            </ul>
+        </div>
+    </main>
+</div>

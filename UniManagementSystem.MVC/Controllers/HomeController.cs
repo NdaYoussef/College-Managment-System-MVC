@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using UniManagementSystem.Domain.Models;
 
 namespace UniManagementSystem.MVC.Controllers
 {
@@ -11,6 +13,15 @@ namespace UniManagementSystem.MVC.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
+          //  return View(model);  
         }
     }
 }

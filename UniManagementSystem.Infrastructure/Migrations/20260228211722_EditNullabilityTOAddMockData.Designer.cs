@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UniManagementSystem.Infrastructure.DBContext;
@@ -11,9 +12,11 @@ using UniManagementSystem.Infrastructure.DBContext;
 namespace UniManagementSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(UniSystemContext))]
-    partial class UniSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20260228211722_EditNullabilityTOAddMockData")]
+    partial class EditNullabilityTOAddMockData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

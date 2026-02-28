@@ -14,8 +14,8 @@ namespace UniManagementSystem.Application.DTOs.DashboardDtos
         public int TotalDepartments { get; set; } 
         public decimal TotalFees { get; set; }
         public List<NotificationDto>?  RecentNotifications { get; set; } = new List<NotificationDto>();
-        public List<CourseDto> CoursesList { get; set; }
-        public List<DepartmentDto> DepartmentsList { get; set; }
+        public List<CourseDto> CoursesList { get; set; } = new List<CourseDto>();
+        public List<DepartmentDto> DepartmentsList { get; set; } = new List<DepartmentDto>();
 
         public SystemStateDto SystemState { get; set; } = new SystemStateDto();
     }
