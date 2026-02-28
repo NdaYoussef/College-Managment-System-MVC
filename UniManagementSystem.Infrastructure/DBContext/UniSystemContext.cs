@@ -80,10 +80,10 @@ namespace UniManagementSystem.Infrastructure.DBContext
             //    .OnDelete(DeleteBehavior.Restrict);
 
 
-            builder.Entity<ApplicationUser>(b =>
-                 b.Property(u => u.Role)
-                 .HasConversion<string>()
-                 .IsRequired());
+            //builder.Entity<ApplicationUser>(b =>
+            //     b.Property(u => u.Role)
+            //     .HasConversion<string>()
+            //     .IsRequired());
 
 
             builder.Entity<ApplicationUser>()

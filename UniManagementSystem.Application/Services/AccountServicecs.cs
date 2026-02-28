@@ -49,18 +49,15 @@ namespace UniManagementSystem.Application.Services
 
             var user = new ApplicationUser
             {
-                //UserName = registerDto.UserName,
+               // UserName = $"{registerDto.FirstName}{registerDto.LastName}",
                 FirstName = registerDto.FirstName,
                 LastName = registerDto.LastName,
                 Email = registerDto.Email,
                 NationalID = registerDto.NationalID,
-            //    Address = registerDto.Address,
-            //    PhoneNumber = registerDto.PhoneNumber,
                 Gender = registerDto.Gender,
-            //    DateOfBirth = registerDto.DateOfBirth,
             };
             await _userManager.SetUserNameAsync(user,user.UserName);
-           // user.UserName = $"{registerDto.FirstName}{registerDto.LastName}".Replace(" ","");
+        
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded)
             {
@@ -70,41 +67,14 @@ namespace UniManagementSystem.Application.Services
 
                 return new AuthDto { Message = errors };
             }
-            var roleName = registerDto.Role.ToString();
 
-            if (!await _roleManager.RoleExistsAsync(roleName))
-            {
-                var roleResult = await _roleManager.CreateAsync(new IdentityRole(roleName));
-                if (!roleResult.Succeeded)
-                {
-                   // await _userManager.DeleteAsync(user);
-                   user.IsDeleted = true;
-                    return new AuthDto
-                    {
-                        Message = "Something gets wrong, try, again later,",
-                        IsAuthenticated = false
-                    };
-                }
-            }
-            var newResult = await _userManager.AddToRoleAsync(user, roleName);
+            
+            var newResult = await _userManager.AddToRoleAsync(user, "Student");
             if (!newResult.Succeeded)
             {
-                //var error = string.Join(" ", newResult.Errors.Select(e => e.Description));
-                //return new AuthDto
-                //{
-                //    IsAuthenticated = false,
-                //    Message = $"Failed to assign role: {error}",
-                //};
-               var error =  new IdentityError
-                {
-                    Description = $"{newResult.Errors}"
-                };
-                return new AuthDto
-                {
-
-                    IsAuthenticated = false,
-                    Message = $"Failed to assign role: {error}",
-                };
+                await _userManager.DeleteAsync(user);
+                var errors = string.Join(", ", newResult.Errors.Select(e => e.Description));
+                return new AuthDto { Message = $"Failed to assign role: {errors}" };
             }
 
             await _signInManager.SignInAsync(user, isPersistent: false);

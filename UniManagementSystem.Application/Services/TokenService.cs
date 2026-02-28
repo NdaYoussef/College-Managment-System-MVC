@@ -29,14 +29,20 @@ namespace UniManagementSystem.Application.Services
         }
         public async Task<string> GenerateToken(ApplicationUser user)
         {
+            var roles = await _userManager.GetRolesAsync(user);
             List<Claim> claims = new List<Claim>()
             {
                 new(ClaimTypes.Name, user.UserName!),
                 new(ClaimTypes.NameIdentifier, user.Id),
-                new(ClaimTypes.Role, user.Role.ToString()),
+               // new(ClaimTypes.Role, user..ToString()),
                 new(JwtRegisteredClaimNames.Email,user.Email!),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),    
             };
+
+            foreach(var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
             SecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]!));
             SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
             JwtSecurityToken token = new JwtSecurityToken(

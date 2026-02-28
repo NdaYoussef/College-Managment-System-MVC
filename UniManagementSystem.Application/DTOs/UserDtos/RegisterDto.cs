@@ -36,12 +36,13 @@ namespace UniManagementSystem.Application.DTOs.UserDtos
         public string NationalID { get; set; }
     //    public string? Address { get; set; }
      //   public string? PhoneNumber { get; set; }
-        public string Gender { get; set; }  
+        public string Gender { get; set; }
 
-       // public DateTime DateOfBirth => 
+        // public DateTime DateOfBirth => 
 
-        [Display(Name ="Person Type")]
-        public Roles Role { get; set; }
+        //[Display(Name = "Person Type")]
+        //[EnumDataType(typeof(Roles))]
+        //public Roles Role { get; set; }
 
     }
 }

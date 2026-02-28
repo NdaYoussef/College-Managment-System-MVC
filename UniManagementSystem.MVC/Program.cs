@@ -157,7 +157,7 @@ namespace UniManagementSystem.MVC
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
-
+            app.UseDeveloperExceptionPage();
             #region Call Seeding
             using (var scope = app.Services.CreateScope())
             {

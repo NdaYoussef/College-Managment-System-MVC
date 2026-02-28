@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using UniManagementSystem.Application.DTOs;
 using UniManagementSystem.Application.DTOs.DashboardDtos;
@@ -16,15 +17,21 @@ namespace UniManagementSystem.Application.Services
     public class DashboardService : IDashboardService
     {
         private readonly UniSystemContext _context;
-       // private readonly 
-        public DashboardService(UniSystemContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        // private readonly 
+        public DashboardService(UniSystemContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
         public async Task<AuthDto> GetAdminDashboardData()
         {
-            var totalStudents = await _context.Users.CountAsync(u=>u.Role ==Roles.Student);
-            var totalLecturers = await _context.Users.CountAsync(l => l.Role == Roles.Lecturer);
+            //var totalStudents = await _context.Users.CountAsync(u=>u.Role ==Roles.Student);
+            //var totalLecturers = await _context.Users.CountAsync(l => l.Role == Roles.Lecturer);
+
+            var totalStudents = await _userManager.GetUsersInRoleAsync(Roles.Student.ToString());
+            var totalLecturers = await _userManager.GetUsersInRoleAsync(Roles.Lecturer.ToString());
+
             var totalCourses = await _context.Courses.CountAsync();
 
             var totalDepartments = await _context.Departments.CountAsync();
@@ -40,7 +47,7 @@ namespace UniManagementSystem.Application.Services
                                                     })
                                                     .ToListAsync();
 
-            var AdminDashboardDto = new AdminDashboardDto
+            var AdminDashboardDto = new 
             {
                 TotalStudents = totalStudents,
                 TotalLecturers = totalLecturers,
@@ -48,12 +55,12 @@ namespace UniManagementSystem.Application.Services
                 TotalDepartments = totalDepartments,
                 TotalFees = totalFees,
                 RecentNotifications =recentNotifications,
-                SystemState = new SystemStateDto
-                {
-                    TotalUsers = totalStudents + totalLecturers,
-                    // StoredUsage = await CalculateStorageUsage();
-                    LastUpdated = DateTime.Now
-                }
+                //SystemState = new SystemStateDto
+                //{
+                //    TotalUsers = ,
+                //    // StoredUsage = await CalculateStorageUsage();
+                //    LastUpdated = DateTime.Now
+                //}
             };
             return new AuthDto
             {
@@ -68,7 +75,7 @@ namespace UniManagementSystem.Application.Services
         public async Task<AuthDto> GetLecturerDashboardDataAsync(string lecturerId)
         {
 
-            var currentLecturer = await _context.Users.FirstOrDefaultAsync(l => l.Id == lecturerId && l.Role == Roles.Lecturer);
+            var currentLecturer = await _context.Users.FirstOrDefaultAsync(l => l.Id == lecturerId);
             if(currentLecturer == null)
                 return new AuthDto
                 {
@@ -112,7 +119,7 @@ namespace UniManagementSystem.Application.Services
 
         public async Task<AuthDto> GetStudentDashboardDataAsync(string studentId)
         {
-            var currentStudent = await _context.Users.Include(d=>d.Department).FirstOrDefaultAsync(l => l.Id == studentId && l.Role == Roles.Student);
+            var currentStudent = await _context.Users.Include(d=>d.Department).FirstOrDefaultAsync(l => l.Id == studentId);
             if(currentStudent == null)
                 return new AuthDto
                 {

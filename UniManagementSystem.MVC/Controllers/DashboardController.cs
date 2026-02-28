@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using UniManagementSystem.Application.DTOs.DashboardDtos;
 using UniManagementSystem.Application.Interfaces;
-using UniManagementSystem.Domain.Models;
+using UniManagementSystem.MVC.Models;
 
 namespace UniManagementSystem.MVC.Controllers
 {

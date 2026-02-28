@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using UniManagementSystem.Domain.Models;
+using UniManagementSystem.MVC.Models;
 
 namespace UniManagementSystem.MVC.Controllers
 {

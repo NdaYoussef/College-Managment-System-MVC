@@ -83,7 +83,7 @@ namespace UniManagementSystem.Domain.Models
             return dob;
         }
         public double? GPA { get; set; }
-        public Roles Role { get; set; }
+      //  public Roles Role { get; set; }
         public decimal? Salary { get; set; }
         public bool IsDeleted { get; set; } = false;
 
