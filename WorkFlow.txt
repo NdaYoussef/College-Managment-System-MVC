@@ -49,3 +49,15 @@ GET /Dashboard/Admin  (مثلاً)
                             └─ ASP.NET بيقرأها ويعبي User.Claims
                                     ├─ ClaimTypes.NameIdentifier = UserId
                                     └─ ClaimTypes.Role = "Admin"
+
+
+builder.Build()
+
+→ Exception Handling Middleware
+→ HTTPS Redirection
+→ Static Files
+→ Routing
+→ Authentication
+→ Authorization
+→ Map Controllers
+→ app.Run()
