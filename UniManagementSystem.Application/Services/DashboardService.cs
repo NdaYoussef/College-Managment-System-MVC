@@ -95,8 +95,8 @@ namespace UniManagementSystem.Application.Services
 
                                                             StudentCount = c.Course.UserCourses.Count(),
                                                             UpcomingSchedules = c.Course.Schedules
-                                                        })
-                                                        .ToListAsync();
+                                                        }).ToListAsync();
+
             var totalStudents = totalCourses.Sum(c => c.StudentCount);
 
             var LecturerDashboard = new 
