@@ -61,7 +61,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var course in Model.CoursesList ?? new List<UniManagementSystem.Application.DTOs.DashboardDtos.CourseDto>())
+                    @foreach (var course in Model.CoursesList ?? new List<UniManagementSystem.Application.DTOs.CourseDto>())
                     {
                         <tr>
                             <td>@course.Name</td>
@@ -78,7 +78,7 @@
         <div class="card-accent">
             <h5>Departments List</h5>
             <ul>
-                @foreach (var dept in Model.DepartmentsList ?? new List<UniManagementSystem.Application.DTOs.DashboardDtos.DepartmentDto>())
+                @foreach (var dept in Model.DepartmentsList ?? new List<UniManagementSystem.Application.DTOs.DepartmentDto>())
                 {
                     <li>@dept.Name</li>
                 }
