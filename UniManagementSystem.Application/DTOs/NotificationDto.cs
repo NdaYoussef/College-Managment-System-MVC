@@ -10,7 +10,7 @@ namespace UniManagementSystem.Application.DTOs
     {
         public bool IsDeleted { get; set; } = false;
         public string Message { get; set; }
-        public DateTime Date { get; set; }
+       // public DateTime Date { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
