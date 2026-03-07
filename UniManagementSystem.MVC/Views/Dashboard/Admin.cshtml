@@ -1,96 +1,240 @@
-﻿@model UniManagementSystem.Application.DTOs.DashboardDtos.AdminDashboardDto
-
+﻿@using UniManagementSystem.Application.DTOs
+@model UniManagementSystem.Application.DTOs.DashboardDtos.AdminDashboardDto
 @{
     ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var dbStatus = Model.SystemState?.DatabaseStatus ?? "Unknown";
+    var dotClass = dbStatus.ToLower() == "online" ? "online"
+                 : dbStatus.ToLower() == "warning" ? "warning" : "offline";
 }
-
-<link rel="stylesheet" href="~/css/Admin.css" />
-
 <div class="dashboard-layout dashboard-admin">
+
     <aside class="dashboard-sidebar">
-        <div class="dashboard-logo">Learner Admin</div>
-        <nav class="dashboard-nav">
-            <a asp-controller="Dashboard" asp-action="Admin" class="active"><i class="bi bi-speedometer2"></i> Overview</a>
-            <a asp-controller="User" asp-action="Index"><i class="bi bi-people"></i> Users</a>
-            <a asp-controller="Courses" asp-action="Index"><i class="bi bi-journal-bookmark"></i> Courses</a>
+        <a asp-controller="Home" asp-action="Index" class="sidebar-logo">
+            <div class="sidebar-logo-icon">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <div class="sidebar-logo-text">
+                <span class="logo-name">College Admin</span>
+                <span class="logo-sub">Admin Panel</span>
+            </div>
+        </a>
+        <div class="sidebar-user">
+            <div class="sidebar-user-avatar">A</div>
+            <div>
+                <span class="sidebar-user-name">Administrator</span>
+                <span class="sidebar-user-role">System Admin</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <span class="nav-section-label">Overview</span>
+            <a asp-controller="Dashboard" asp-action="Admin" class="nav-item active">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            <span class="nav-section-label">Management</span>
+            <a asp-controller="User" asp-action="Index" class="nav-item">
+                <i class="bi bi-people"></i> Users
+            </a>
+            <a asp-controller="Courses" asp-action="Index" class="nav-item">
+                <i class="bi bi-journal-bookmark"></i> Courses
+            </a>
+            <a asp-controller="Department" asp-action="Index" class="nav-item">
+                <i class="bi bi-building"></i> Departments
+            </a>
+            <span class="nav-section-label">System</span>
+            <a href="#" class="nav-item">
+                <i class="bi bi-bell"></i> Notifications
+            </a>
+            <a href="#" class="nav-item">
+                <i class="bi bi-gear"></i> Settings
+            </a>
         </nav>
+        <div class="sidebar-footer">
+            <a asp-controller="Account" asp-action="Logout" class="nav-item">
+                <i class="bi bi-box-arrow-left"></i> Logout
+            </a>
+        </div>
     </aside>
 
     <main class="dashboard-main">
-        <div class="dashboard-header">
-            <h1 class="dashboard-title">Admin Dashboard</h1>
-            <span class="dashboard-role-badge">Admin</span>
+        <div class="dashboard-topbar">
+            <div>
+                <h1 class="topbar-title">Admin Dashboard</h1>
+                <p class="topbar-subtitle">Welcome back — here's what's happening today.</p>
+            </div>
+            <div class="topbar-right">
+                <span class="role-badge">Admin</span>
+                <a href="#" class="icon-btn" title="Notifications">
+                    <i class="bi bi-bell"></i>
+                </a>
+                <a href="#" class="icon-btn" title="Settings">
+                    <i class="bi bi-gear"></i>
+                </a>
+            </div>
         </div>
-
-        <div class="card-accent">
-            <h5>System Stats</h5>
-            <p>Total Students: @Model.TotalStudents</p>
-            <p>Total Lecturers: @Model.TotalLecturers</p>
-            <p>Total Courses: @Model.TotalCourses</p>
-            <p>Total Departments: @Model.TotalDepartments</p>
-            <p>Total Fees: @Model.TotalFees.ToString("C")</p>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-top">
+                    <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+                    <span class="stat-trend">↑ Active</span>
+                </div>
+                <div class="stat-value">@Model.TotalStudents</div>
+                <div class="stat-label">Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-top">
+                    <div class="stat-icon"><i class="bi bi-person-workspace"></i></div>
+                    <span class="stat-trend">↑ Staff</span>
+                </div>
+                <div class="stat-value">@Model.TotalLecturers</div>
+                <div class="stat-label">Lecturers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-top">
+                    <div class="stat-icon"><i class="bi bi-journal-bookmark-fill"></i></div>
+                    <span class="stat-trend">↑ Live</span>
+                </div>
+                <div class="stat-value">@Model.TotalCourses</div>
+                <div class="stat-label">Courses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-top">
+                    <div class="stat-icon"><i class="bi bi-building-fill"></i></div>
+                    <span class="stat-trend">Active</span>
+                </div>
+                <div class="stat-value">@Model.TotalDepartments</div>
+                <div class="stat-label">Departments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-top">
+                    <div class="stat-icon"><i class="bi bi-cash-stack"></i></div>
+                    <span class="stat-trend">↑ Revenue</span>
+                </div>
+                <div class="stat-value">@Model.TotalFees.ToString("C0")</div>
+                <div class="stat-label">Total Fees</div>
+            </div>
         </div>
-
-        <div class="card-accent">
-            <h5>Recent Notifications</h5>
-            <ul>
-                @if (Model.RecentNotifications != null && Model.RecentNotifications.Any())
-                {
-                    foreach (var note in Model.RecentNotifications)
+        <div class="content-grid">
+            <div class="dash-card">
+                <div class="card-head">
+                    <div class="card-head-left">
+                        <div class="card-head-icon"><i class="bi bi-bell-fill"></i></div>
+                        <h5>Recent Notifications</h5>
+                    </div>
+                    @if (Model.RecentNotifications?.Any() == true)
                     {
-                        <li>@note.Message (@note.Date.ToString("g"))</li>
+                        <span class="card-badge">@Model.RecentNotifications.Count() new</span>
                     }
-                }
-                else
-                {
-                    <li>No recent notifications.</li>
-                }
-            </ul>
-        </div>
-
-        <div class="card-accent">
-            <h5>Courses List</h5>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Code</th>
-                        <th>Department</th>
-                        <th>Max Degree</th>
-                        <th>Min Degree</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var course in Model.CoursesList ?? new List<UniManagementSystem.Application.DTOs.CourseDto>())
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentNotifications?.Any() == true)
                     {
+                        <ul class="notif-list">
+                            @foreach (var note in Model.RecentNotifications)
+                            {
+                                <li class="notif-item">
+                                    <span class="notif-dot"></span>
+                                    <div>
+                                        <div class="notif-msg">@note.Message</div>
+                                        <div class="notif-time">@note.CreatedAt.ToString("MMM dd, yyyy · hh:mm tt")</div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="empty-state">
+                            <i class="bi bi-bell-slash"></i>
+                            No recent notifications
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="dash-card">
+                <div class="card-head">
+                    <div class="card-head-left">
+                        <div class="card-head-icon"><i class="bi bi-cpu-fill"></i></div>
+                        <h5>System State</h5>
+                    </div>
+                    <span class="card-badge">Live</span>
+                </div>
+                <div class="card-body">
+                    <div class="sysstate-grid">
+                        <div class="sysstate-item">
+                            <div class="sysstate-label">Server Uptime</div>
+                            <div class="sysstate-value">
+                                <i class="bi bi-clock" style="color:var(--accent-color);font-size:.85rem;"></i>
+                                @(Model.SystemState?.ServerUptime ?? "N/A")
+                            </div>
+                        </div>
+                        <div class="sysstate-item">
+                            <div class="sysstate-label">Active Users</div>
+                            <div class="sysstate-value">
+                                <i class="bi bi-people" style="color:var(--accent-color);font-size:.85rem;"></i>
+                                @(Model.SystemState?.ActiveUsers ?? 0)
+                            </div>
+                        </div>
+                        <div class="sysstate-item" style="grid-column: span 2;">
+                            <div class="sysstate-label">Database Status</div>
+                            <div class="sysstate-value">
+                                <span class="status-pill @dotClass">
+                                    <span class="status-dot @dotClass"></span>
+                                    @dbStatus
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dash-card content-grid full" style="margin-bottom: 0;">
+            <div class="card-head">
+                <div class="card-head-left">
+                    <div class="card-head-icon"><i class="bi bi-journal-bookmark-fill"></i></div>
+                    <h5>Courses</h5>
+                </div>
+                @{
+                    var count = (Model.RecentCourses ?? Enumerable.Empty<CourseDto>()).Count();
+                }
+                <span class="card-badge">@count total</span>
+            </div>
+            <div class="card-body flush">
+                <table class="dash-table">
+                    <thead>
                         <tr>
-                            <td>@course.Name</td>
-                            <td>@course.Code</td>
-                            <td>@course.Department</td>
-                            <td>@course.MaxDegree</td>
-                            <td>@course.MinDegree</td>
+                            <th>Course Name</th>
+                            <th>Code</th>
+                            <th>Department</th>
+                            <th>Max Degree</th>
+                            <th>Min Degree</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var course in Model.RecentCourses ?? Enumerable.Empty<CourseDto>())
+                        {
+                            <tr>
+                                <td class="td-name">@course.Name</td>
+                                <td><span class="td-code">@course.Code</span></td>
+                                <td><span class="td-dept">@course.Department</span></td>
+                                <td>@course.MaxDegree</td>
+                                <td>@course.MinDegree</td>
+                            </tr>
+                        }
+                        @if (!(Model.RecentCourses?.Any() ?? false))
+                        {
+                            <tr>
+                                <td colspan="5">
+                                    <div class="empty-state">
+                                        <i class="bi bi-journal-x"></i>
+                                        No courses found
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
-
-        <div class="card-accent">
-            <h5>Departments List</h5>
-            <ul>
-                @foreach (var dept in Model.DepartmentsList ?? new List<UniManagementSystem.Application.DTOs.DepartmentDto>())
-                {
-                    <li>@dept.Name</li>
-                }
-            </ul>
-        </div>
-
-        <div class="card-accent">
-            <h5>System State</h5>
-            <p>Server Uptime: @Model.SystemState.ServerUptime</p>
-            <p>Active Users: @Model.SystemState.ActiveUsers</p>
-            <p>Database Status: @Model.SystemState.DatabaseStatus</p>
-        </div>
-
     </main>
 </div>
