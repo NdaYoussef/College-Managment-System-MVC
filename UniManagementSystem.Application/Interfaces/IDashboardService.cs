@@ -15,12 +15,12 @@ namespace UniManagementSystem.Application.Interfaces
         //  Task<AuthDto> 
 
         // Lecturer Methods
-        Task<AuthDto> GetLecturerDashboardDataAsync(string lecturerId);
+        //Task<AuthDto> GetLecturerDashboardDataAsync(string lecturerId);
         //  Task<List<CourseDto>> GetLecturerCoursesAsync(string lecturerId);
        // Task<List<ScheduleDto>> GetUpcomingSchedulesAsync(string lecturerId);
 
         // Student Methods
-        Task<AuthDto> GetStudentDashboardDataAsync(string studentId);
+        //Task<AuthDto> GetStudentDashboardDataAsync(string studentId);
         // Task<List<CourseDto>> GetStudentCoursesAsync(string studentId);
         // Task<StudentAcademicDto> GetStudentAcademicDataAsync(string studentId);
 
