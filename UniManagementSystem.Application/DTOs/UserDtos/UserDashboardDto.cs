@@ -16,7 +16,7 @@ namespace UniManagementSystem.Application.DTOs.UserDtos
         public string? NationalID { get; set; }
         public DateTime DateOfBirth { get; set; }
         public int Age => (int)((DateTime.UtcNow - DateOfBirth).TotalDays / 365.25);
-        public Roles Role { get; set; } = default!;
+        public UserRoles Role { get; set; } = default!;
         public string? DepartmentName { get; set; }
         public double? GPA { get; set; }
         public decimal? Salary { get; set; }
