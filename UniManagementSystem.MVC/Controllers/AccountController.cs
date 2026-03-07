@@ -72,7 +72,7 @@ namespace UniManagementSystem.MVC.Controllers
             }
 
            //check model role
-            Console.WriteLine($"User roles: {string.Join(", ", model.Role)}");
+            Console.WriteLine($"User roles: {string.Join(", ", model.Role.ToString())}");
         
             return Redirect(result.RedirectUrl);
         }
