@@ -11,7 +11,7 @@ namespace UniManagementSystem.Domain.Models
         public string Message { get; set; }
        // public DateTime Date { get; set; } = DateTime.UtcNow;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public Roles RecepetiveRole { get; set; }
+    //    public Roles RecepetiveRole { get; set; }
         public ApplicationUser? User { get; set; }
         [ForeignKey("User")]
         public string? UserId { get; set; }
