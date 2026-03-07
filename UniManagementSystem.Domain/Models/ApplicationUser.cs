@@ -13,7 +13,7 @@ namespace UniManagementSystem.Domain.Models
 
         [Required, MaxLength(50)]
         public string LastName { get; set; }
-        public string UserName => $"{FirstName}{LastName}";
+        public string FullName => $"{FirstName}{LastName}";
 
         [MaxLength(250)]
         public string? Address { get; set; }
