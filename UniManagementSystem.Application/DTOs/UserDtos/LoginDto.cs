@@ -17,7 +17,7 @@ namespace UniManagementSystem.Application.DTOs.UserDtos
         public string Password { get; set; }
 
         [Display(Name = "Person Type")]
-        public Roles Role { get; set; }
+        public UserRoles Role { get; set; }
 
     }
 }
