@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - UniManagementSystem</title>
+
+    <link rel="icon" type="image/png" href="~/assets/img/learning.png" />
+
+
+    <link href="~/assets/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+
+    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+
+    <link href="~/assets/css/main.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="~/css/Dashboard/Admin.css" />
+
+
+    <style>
+        /* Remove default body margin from site.css */
+        body {
+            margin-bottom: 0 !important;
+            overflow-x: hidden;
+        }
+
+        /* Smooth scrollbar for main area */
+        .dashboard-main::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .dashboard-main::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .dashboard-main::-webkit-scrollbar-thumb {
+            background: rgba(19,106,213,0.2);
+            border-radius: 10px;
+        }
+    </style>
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+
+    @RenderBody()
+
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>
