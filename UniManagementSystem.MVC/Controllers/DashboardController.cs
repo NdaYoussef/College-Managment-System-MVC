@@ -10,10 +10,12 @@ namespace UniManagementSystem.MVC.Controllers
     public class DashboardController : Controller
     {
         private readonly IDashboardService _dashboardService;
+        private readonly ILogger<DashboardController> _logger;
 
-        public DashboardController(IDashboardService dashboardService)
+        public DashboardController(IDashboardService dashboardService, ILogger<DashboardController> logger)
         {
             _dashboardService = dashboardService;
+            _logger = logger;
         }
 
         //get admin Dashboard 
@@ -46,90 +48,84 @@ namespace UniManagementSystem.MVC.Controllers
 
             if (!result.IsAuthenticated || result.Data == null)
             {
-                TempData["Error"] = result?.Message ?? "Failed to load admin dashboard.";
+                var errorMessage = result?.Message ?? "Failed to load admin dashboard.";
+                TempData["Error"] = errorMessage;
+
+                _logger.LogError("Admin dashboard data retrieval failed: {Message}", result?.Message);
+                
                 return View("Error", new ErrorViewModel
                 {
                     RequestId = HttpContext.TraceIdentifier
                 });
             }
 
-            var model = result.Data as AdminDashboardDto;
-            if (model == null)
-            {
-                TempData["Error"] = "Invalid admin dashboard data.";
-                return View("Error", new ErrorViewModel
-                {
-                    RequestId = HttpContext.TraceIdentifier
-                });
-            }
-
-            return View("Admin", model);
+            return View("Admin", result.Data);
         }
 
 
 
         // Lecturer Dashboard
-        [Authorize(Roles = "Lecturer")]
-        public async Task<IActionResult> Lecturer()
-        {
-            var lecturerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(lecturerId))
-                return RedirectToAction("Login", "Account");
+        //[Authorize(Roles = "Lecturer")]
+        //public async Task<IActionResult> Lecturer()
+        //{
+        //    var lecturerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //    if (string.IsNullOrEmpty(lecturerId))
+        //        return RedirectToAction("Login", "Account");
 
-            var result = await _dashboardService.GetLecturerDashboardDataAsync(lecturerId);
+        //    var result = await _dashboardService.GetLecturerDashboardDataAsync(lecturerId);
 
-            if (!result.IsAuthenticated || result.Data == null)
-            {
-                TempData["Error"] = result?.Message ?? "Failed to load lecturer dashboard.";
-                return View("Error", new ErrorViewModel
-                {
-                    RequestId = HttpContext.TraceIdentifier
-                });
-            }
+        //    if (!result.IsAuthenticated || result.Data == null)
+        //    {
+        //        TempData["Error"] = result?.Message ?? "Failed to load lecturer dashboard.";
+        //        return View("Error", new ErrorViewModel
+        //        {
+        //            RequestId = HttpContext.TraceIdentifier
+        //        });
+        //    }
 
-            var model = result.Data as LecturerDashboardDto;
-            if (model == null)
-            {
-                TempData["Error"] = "Invalid lecturer dashboard data.";
-                return View("Error", new ErrorViewModel
-                {
-                    RequestId = HttpContext.TraceIdentifier
-                });
-            }
+        //    var model = result.Data as LecturerDashboardDto;
+        //    if (model == null)
+        //    {
+        //        TempData["Error"] = "Invalid lecturer dashboard data.";
+        //        return View("Error", new ErrorViewModel
+        //        {
+        //            RequestId = HttpContext.TraceIdentifier
+        //        });
+        //    }
 
-            return View("Lecturer", model);
-        }
+        //    return View("Lecturer", model);
+        //}
 
-        [Authorize(Roles = "Student")]
-        public async Task<IActionResult> Student()
-        {
-            var studentId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(studentId))
-                return RedirectToAction("Login", "Account");
+        //[Authorize(Roles = "Student")]
+        //public async Task<IActionResult> Student()
+        //{
+        //    var studentId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //    if (string.IsNullOrEmpty(studentId))
+        //        return RedirectToAction("Login", "Account");
 
-            var result = await _dashboardService.GetStudentDashboardDataAsync(studentId);
+        //    var result = await _dashboardService.GetStudentDashboardDataAsync(studentId);
 
-            if (!result.IsAuthenticated || result.Data == null)
-            {
-                TempData["Error"] = result?.Message ?? "Failed to load student dashboard.";
-                return View("Error", new ErrorViewModel
-                {
-                    RequestId = HttpContext.TraceIdentifier
-                });
-            }
+        //    if (!result.IsAuthenticated || result.Data == null)
+        //    {
+        //        TempData["Error"] = result?.Message ?? "Failed to load student dashboard.";
+        //        return View("Error", new ErrorViewModel
+        //        {
+        //            RequestId = HttpContext.TraceIdentifier
+        //        });
+        //    }
 
-            var model = result.Data as UniManagementSystem.Application.DTOs.DashboardDtos.StudentDashboardDto;
-            if (model == null)
-            {
-                TempData["Error"] = "Invalid student dashboard data.";
-                return View("Error", new ErrorViewModel
-                {
-                    RequestId = HttpContext.TraceIdentifier
-                });
-            }
+        //    var model = result.Data as UniManagementSystem.Application.DTOs.DashboardDtos.StudentDashboardDto;
+        //    if (model == null)
+        //    {
+        //        TempData["Error"] = "Invalid student dashboard data.";
+        //        return View("Error", new ErrorViewModel
+        //        {
+        //            RequestId = HttpContext.TraceIdentifier
+        //        });
+        //    }
 
-            return View("Student", model);
-        }
+        //    return View("Student", model);
+        //}
 
         public IActionResult Unauthorized()
         { return View(); }  
