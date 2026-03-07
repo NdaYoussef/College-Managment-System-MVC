@@ -27,9 +27,9 @@ namespace UniManagementSystem.MVC
 
             builder.Services.AddControllersWithViews();
 
-            // Add services to the container.
-            #region SeriLog settinges
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+                // Add services to the container.
+                #region SeriLog settinges
+                var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
             Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(config).CreateLogger();
             Log.Information("App Starts!");
             builder.Host.UseSerilog();
@@ -171,6 +171,13 @@ namespace UniManagementSystem.MVC
                 var service = scope.ServiceProvider;
                 await SeedData.SeedRoles(service); 
             }
+            //var hasher = new PasswordHasher<ApplicationUser>();
+
+            //var user = new ApplicationUser();
+
+            //string hash = hasher.HashPassword(user, "Admin@123");
+
+            //Console.WriteLine(hash);
             #endregion
             app.Run();
         }
