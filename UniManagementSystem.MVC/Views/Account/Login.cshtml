@@ -136,7 +136,7 @@
                                     </label>
                                     <select asp-for="Role" class="form-select">
                                         <option value="">-- Select Role --</option>
-                                        @foreach (var role in Enum.GetValues(typeof(UniManagementSystem.Domain.Enums.Roles)))
+                                        @foreach (var role in Enum.GetValues(typeof(UniManagementSystem.Domain.Enums.UserRoles)))
                                         {
                                             <option value="@((int)role)">@role</option>
                                         }
