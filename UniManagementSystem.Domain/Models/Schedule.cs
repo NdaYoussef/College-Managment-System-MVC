@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using UniManagementSystem.Domain.BaseModel;
 
 namespace UniManagementSystem.Domain.Models
 {
-    public class Schedule
+    public class Schedule : BaseClass<int>
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public DayOfWeek Day { get; set; }
 
         public TimeSpan StartTime { get; set; } = TimeSpan.Zero;

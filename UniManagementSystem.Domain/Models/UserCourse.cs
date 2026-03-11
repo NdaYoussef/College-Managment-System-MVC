@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using UniManagementSystem.Domain.BaseModel;
 
 namespace UniManagementSystem.Domain.Models
 {
-    public class UserCourse
+    public class UserCourse : BaseClass<int>
     {
         [Required]
         public string UserId { get; set; }

@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using UniManagementSystem.Domain.BaseModel;
 using UniManagementSystem.Domain.Enums;
 
 namespace UniManagementSystem.Domain.Models
 {
-    public class Notification
+    public class Notification : BaseClass<int>
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         [Required]
         public string Message { get; set; }
        // public DateTime Date { get; set; } = DateTime.UtcNow;

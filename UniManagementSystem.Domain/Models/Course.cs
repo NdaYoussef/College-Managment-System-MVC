@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using UniManagementSystem.Domain.BaseModel;
 
 namespace UniManagementSystem.Domain.Models
 {
-    public class Course
+    public class Course : BaseClass<int>
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         [Required, MaxLength(150)]
         public string Name { get; set; }
         public int MaxDegree { get; set; } = 100;

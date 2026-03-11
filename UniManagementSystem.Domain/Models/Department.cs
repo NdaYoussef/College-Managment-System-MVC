@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using UniManagementSystem.Domain.BaseModel;
 
 namespace UniManagementSystem.Domain.Models
 {
-    public class Department
+    public class Department : BaseClass<int>
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         [Required, MaxLength(100)]
         public string Name { get; set; }
 

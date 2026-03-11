@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using UniManagementSystem.Domain.BaseModel;
 
 namespace UniManagementSystem.Domain.Models
 {
-    public class Fee
+    public class Fee : BaseClass<int>
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         [Required]
         public decimal Amount {  get; set; }
         public DateTime Date { get; set; } = DateTime.UtcNow;
