@@ -14,6 +14,8 @@ namespace UniManagementSystem.Application.Mappings
         public  void Register(TypeAdapterConfig config) 
         {
             config.NewConfig<ApplicationUser, UserDashboardDto>();
+            config.NewConfig<ApplicationUser, EditUserDto>();
+            config.NewConfig<ApplicationUser, CreatUserDto>();
         }
     }
 }
