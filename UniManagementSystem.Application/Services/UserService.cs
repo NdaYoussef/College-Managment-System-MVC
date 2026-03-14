@@ -2,6 +2,7 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 using UniManagementSystem.Application.DTOs;
 using UniManagementSystem.Application.DTOs.UserDtos;
 using UniManagementSystem.Application.Interfaces;
+using UniManagementSystem.Domain.Enums;
 using UniManagementSystem.Domain.Models;
 using UniManagementSystem.Infrastructure.DBContext;
 
@@ -21,14 +23,19 @@ namespace UniManagementSystem.Application.Services
         private readonly IMapper _mapper;
         private readonly UniSystemContext _context;
         private readonly ICloudinaryService _cloudinaryService;
-        public UserService(UserManager<ApplicationUser> userManager, IMapper mapper, 
-            UniSystemContext context, ICloudinaryService cloudinaryService)
+        private readonly RoleManager<ApplicationUser> _roleManager;
+
+        #region Ctor
+        public UserService(UserManager<ApplicationUser> userManager, IMapper mapper,
+           UniSystemContext context, ICloudinaryService cloudinaryService, RoleManager<ApplicationUser> roleManager)
         {
             _userManager = userManager;
             _mapper = mapper;
             _context = context;
             _cloudinaryService = cloudinaryService;
-        }
+            _roleManager = roleManager;
+        } 
+        #endregion
 
 
         public async Task<AuthDto> GetUserData(string userId)
@@ -74,43 +81,6 @@ namespace UniManagementSystem.Application.Services
                 IsAuthenticated = true,
                 Message = "User data retrieved",
                 Data = data
-            };
-        }
-
-        public async Task<AuthDto> UpdateUserData(ApplicationUser user)
-        {
-            var currentUser = await _userManager.FindByIdAsync(user.Id);
-            if (currentUser is null)
-            {
-                return new AuthDto
-                {
-                    IsAuthenticated = false,
-                    Message = "User not found"
-                };
-            }
-            user.Adapt(currentUser);
-            // _mapper.Map(user, currentUser);
-            var result =   await _userManager.UpdateAsync(currentUser);
-            if (!result.Succeeded)
-            {
-                var errors = string.Empty;
-                foreach (var error in result.Errors)
-                {
-                    errors += $"{error.Description}";
-                }
-                return new AuthDto
-                {
-                    IsAuthenticated = false,
-                    Message = errors
-                };
-            }
-
-            var dto = _mapper.Map<UserDashboardDto>(currentUser);
-            return new AuthDto
-            {
-                IsAuthenticated = true,
-                Message = "User updated successfully",
-                Data = dto
             };
         }
         public  async Task<(bool IsSuccess, string message)> ChangePasswordAsync(string userId, string oldPassword, string newPassword)
@@ -177,7 +147,88 @@ namespace UniManagementSystem.Application.Services
             };
         }
 
-        public async Task<AuthDto> DeleteUserData(string userId)
+        public async Task<AuthDto> GetAllUsers()
+        {
+            //var users = await _context.Users.AsNoTracking().ToListAsync();
+            //var result = new List<UserInfoDto>();
+
+            //foreach(var user in users)
+            //{
+            //    var role = await _userManager.GetRolesAsync(user);
+            //    result.Add(new UserInfoDto
+            //    {
+            //        UserId = user.Id,
+            //        UserName = user.UserName,
+            //        Role = role.ToString(),
+            //    });
+            //}
+            ////////////////##Code Refactoring 
+
+            var users = await _context.Users.AsNoTracking().ToListAsync();
+
+
+            var tasks = users.Select(async user => new UserInfoDto
+            {
+                UserId = user.Id,
+                UserName = user.UserName,
+                Role = string.Join(",",await _userManager.GetRolesAsync(user))
+            });
+
+           var result = await Task.WhenAll(tasks);
+            return new AuthDto
+            {
+                IsAuthenticated = true,
+                Data = result,
+                Message = "Users retrived successfully!",
+            };
+        }
+
+        public Task<AuthDto> CreateUserAsync(CreatUserDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<AuthDto> EditUserAsync(EditUserDto dto)
+        {
+            if(dto is null)
+            {
+                return new AuthDto
+                {
+                    IsAuthenticated = false,
+                    Message = "Invalid request data",
+                };
+            }
+           var currebtUser = await _userManager.FindByIdAsync(dto.Id);
+            if(currebtUser == null)
+            {
+                return new AuthDto
+                {
+                    IsAuthenticated = false,
+                    Message = "User not found",
+                };
+            }
+
+            dto.Adapt(currebtUser);
+           var result =  await _userManager.UpdateAsync(currebtUser);
+            if(!result.Succeeded)
+            {
+                return new AuthDto
+                {
+                    IsAuthenticated = false,
+                    Message = result.Errors.ToString()
+                };
+            }
+
+            return new AuthDto
+            {
+                IsAuthenticated = true,
+                Message = "User updated successfully!"
+            };
+            // _context.Entry(currebtUser).State = EntityState.Modified;
+            
+        }
+
+        public async Task<AuthDto> DeleteUserAsync(string userId)
         {
             var currentUser = await _userManager.FindByIdAsync(userId);
             if (currentUser is null)
@@ -218,8 +269,5 @@ namespace UniManagementSystem.Application.Services
                 Message = "User deleted successfully"
             };
         }
-
-       
-       
     }
 }
