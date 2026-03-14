@@ -12,9 +12,12 @@ namespace UniManagementSystem.Application.Interfaces
 {
     public interface IUserService
     {
+        Task<AuthDto> GetAllUsers();
         Task<AuthDto> GetUserData(string userId);
-        Task<AuthDto> UpdateUserData(ApplicationUser user);
-        Task<AuthDto> DeleteUserData(string userId);
+        Task<AuthDto> CreateUserAsync(CreatUserDto dto);
+
+        Task<AuthDto> EditUserAsync(EditUserDto dto);
+        Task<AuthDto> DeleteUserAsync(string userId);
         Task<AuthDto> ChangeProfilePictureAsync(string userId,  IFormFile ProfileImage);
 
         Task<(bool IsSuccess, string message)> ChangePasswordAsync(string userId, string oldPassword, string newPassword);
