@@ -7,7 +7,7 @@ using UniManagementSystem.Domain.Enums;
 
 namespace UniManagementSystem.Application.DTOs.UserDtos
 {
-    internal class UserDashboardDto
+    public class UserDashboardDto
     {
         public string Id { get; set; } = default!;
         public string UserName { get; set; } = default!;
