@@ -24,6 +24,7 @@
 
     <!-- Main CSS File -->
     <link href="~/assets/css/main.css" rel="stylesheet">
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
@@ -87,6 +88,7 @@
 
     <!-- Main JS File -->
     <script src="~/assets/js/main.js"></script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
