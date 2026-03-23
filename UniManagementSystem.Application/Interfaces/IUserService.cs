@@ -19,7 +19,7 @@ namespace UniManagementSystem.Application.Interfaces
         Task<AuthDto> EditUserAsync(EditUserDto dto);
         Task<AuthDto> DeleteUserAsync(string userId);
         Task<AuthDto> ChangeProfilePictureAsync(string userId,  IFormFile ProfileImage);
-
+        Task<AuthDto> ChangeUserRoleAsync(string userId, string newRole);
         Task<(bool IsSuccess, string message)> ChangePasswordAsync(string userId, string oldPassword, string newPassword);
     }
 }
