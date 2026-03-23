@@ -183,9 +183,42 @@ namespace UniManagementSystem.Application.Services
             };
         }
 
-        public Task<AuthDto> CreateUserAsync(CreatUserDto dto)
+        public async Task<AuthDto> CreateUserAsync(CreatUserDto dto)
         {
-            throw new NotImplementedException();
+            if (dto is null)
+            {
+                return new AuthDto
+                {
+                    IsAuthenticated = false,
+                    Message = "Invalid request data",
+                };
+            }
+            var currebtUser = await _userManager.FindByEmailAsync(dto.Email);
+            if (currebtUser is not null)
+            {
+                return new AuthDto
+                {
+                    IsAuthenticated = false,
+                    Message = "User already found",
+                };
+            }
+
+           var newUser =  dto.Adapt<ApplicationUser>();
+            var result = await _userManager.CreateAsync(newUser, dto.Password);
+            if(!result.Succeeded)
+            {
+                return new AuthDto
+                {
+                    IsAuthenticated = false,
+                    Message = string.Join(", ", result.Errors.Select(e => e.Description))
+                };
+            }
+            return new AuthDto
+            {
+                IsAuthenticated = true,
+                Message = "User created successfully!",
+                Data = newUser.Email
+            };
         }
 
         public async Task<AuthDto> EditUserAsync(EditUserDto dto)
