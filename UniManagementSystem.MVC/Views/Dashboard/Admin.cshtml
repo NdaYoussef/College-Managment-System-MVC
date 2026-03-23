@@ -28,19 +28,29 @@
         </div>
         <nav class="sidebar-nav">
             <span class="nav-section-label">Overview</span>
-            <a asp-controller="Dashboard" asp-action="Admin" class="nav-item active">
+
+            <a asp-controller="Dashboard" asp-action="Admin"
+               class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")">
                 <i class="bi bi-speedometer2"></i> Dashboard
             </a>
+
             <span class="nav-section-label">Management</span>
-            <a asp-controller="User" asp-action="Index" class="nav-item">
+
+            <a asp-controller="Admin" asp-action="Users"
+               class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" ? "active" : "")">
                 <i class="bi bi-people"></i> Users
             </a>
-            <a asp-controller="Courses" asp-action="Index" class="nav-item">
+
+            <a asp-controller="Courses" asp-action="Index"
+               class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Courses" ? "active" : "")">
                 <i class="bi bi-journal-bookmark"></i> Courses
             </a>
-            <a asp-controller="Department" asp-action="Index" class="nav-item">
+
+            <a asp-controller="Department" asp-action="Index"
+               class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Department" ? "active" : "")">
                 <i class="bi bi-building"></i> Departments
             </a>
+
             <span class="nav-section-label">System</span>
             <a href="#" class="nav-item">
                 <i class="bi bi-bell"></i> Notifications
@@ -49,13 +59,13 @@
                 <i class="bi bi-gear"></i> Settings
             </a>
         </nav>
+
         <div class="sidebar-footer">
             <a asp-controller="Account" asp-action="Logout" class="nav-item">
                 <i class="bi bi-box-arrow-left"></i> Logout
             </a>
         </div>
     </aside>
-
     <main class="dashboard-main">
         <div class="dashboard-topbar">
             <div>
