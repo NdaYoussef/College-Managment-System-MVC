@@ -42,6 +42,7 @@ namespace UniManagementSystem.MVC.Controllers
 
         // Admin Dashboard
         [Authorize(Roles = "Admin")]
+       
         public async Task<IActionResult> Admin()
         {
             var result = await _dashboardService.GetAdminDashboardData();
