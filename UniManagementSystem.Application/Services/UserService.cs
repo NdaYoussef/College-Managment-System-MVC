@@ -23,11 +23,11 @@ namespace UniManagementSystem.Application.Services
         private readonly IMapper _mapper;
         private readonly UniSystemContext _context;
         private readonly ICloudinaryService _cloudinaryService;
-        private readonly RoleManager<ApplicationUser> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         #region Ctor
         public UserService(UserManager<ApplicationUser> userManager, IMapper mapper,
-           UniSystemContext context, ICloudinaryService cloudinaryService, RoleManager<ApplicationUser> roleManager)
+           UniSystemContext context, ICloudinaryService cloudinaryService, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _mapper = mapper;
