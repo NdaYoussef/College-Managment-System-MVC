@@ -70,9 +70,9 @@ namespace UniManagementSystem.Application.Services
 
 
             var dto = _mapper.Map<UserDashboardDto>(user);
-            var data = new
+            var data = new UserDetailsResponseDto
             {
-                user = dto,
+                User = dto,
                 Roles = roles,
                 DashboardRoute = dashboardRoute
             };
@@ -149,40 +149,29 @@ namespace UniManagementSystem.Application.Services
 
         public async Task<AuthDto> GetAllUsers()
         {
-            //var users = await _context.Users.AsNoTracking().ToListAsync();
-            //var result = new List<UserInfoDto>();
-
-            //foreach(var user in users)
-            //{
-            //    var role = await _userManager.GetRolesAsync(user);
-            //    result.Add(new UserInfoDto
-            //    {
-            //        UserId = user.Id,
-            //        UserName = user.UserName,
-            //        Role = role.ToString(),
-            //    });
-            //}
-            ////////////////##Code Refactoring 
-
             var users = await _context.Users.AsNoTracking().ToListAsync();
+            var result = new List<UserInfoDto>();
 
-
-            var tasks = users.Select(async user => new UserInfoDto
+            foreach (var user in users)
             {
-                UserId = user.Id,
-                UserName = user.UserName,
-                Role = string.Join(",",await _userManager.GetRolesAsync(user))
-            });
+               
+                var roles = await _userManager.GetRolesAsync(user);
 
-           var result = await Task.WhenAll(tasks);
+                result.Add(new UserInfoDto
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    Role = string.Join(", ", roles) 
+                });
+            }
+
             return new AuthDto
             {
                 IsAuthenticated = true,
                 Data = result,
-                Message = "Users retrived successfully!",
+                Message = "Users retrieved successfully!",
             };
         }
-
         public async Task<AuthDto> CreateUserAsync(CreatUserDto dto)
         {
             if (dto is null)
@@ -281,6 +270,11 @@ namespace UniManagementSystem.Application.Services
                 };
 
             }
+            if (currentUser.RefreshTokens != null)
+            {
+                currentUser.RefreshTokens.Clear(); 
+                await _context.SaveChangesAsync(); 
+            }
             var result = await _userManager.DeleteAsync(currentUser);
             if (!result.Succeeded)
             {
@@ -300,6 +294,27 @@ namespace UniManagementSystem.Application.Services
             {
                 IsAuthenticated = true,
                 Message = "User deleted successfully"
+            };
+        }
+
+        // UserService.cs
+        public async Task<AuthDto> ChangeUserRoleAsync(string userId, string newRole)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return new AuthDto
+            {
+                IsAuthenticated = false,
+                Message = "Invalid Request",
+            };
+
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            await _userManager.AddToRoleAsync(user, newRole);
+
+            return new AuthDto
+            {
+                IsAuthenticated = true,
+                Message = "Role Change Successfully",
             };
         }
     }
