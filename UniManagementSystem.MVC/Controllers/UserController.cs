@@ -57,7 +57,7 @@ namespace UniManagementSystem.MVC.Controllers
         {
             if (string.IsNullOrEmpty(userId)) return BadRequest();
 
-            var result = await _userDashboard.DeleteUserData(userId);
+            var result = await _userDashboard.DeleteUserAsync(userId);
             if (!result.IsAuthenticated)
             {
                 TempData["Error"] = result.Message;
