@@ -35,4 +35,8 @@
     <ProjectReference Include="..\UniManagementSystem.Application\UniManagementSystem.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\User\" />
+  </ItemGroup>
+
 </Project>
