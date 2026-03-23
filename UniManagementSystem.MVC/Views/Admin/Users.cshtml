@@ -1,0 +1,149 @@
+﻿@model IEnumerable<UniManagementSystem.Application.DTOs.UserDtos.UserInfoDto>
+@{
+    ViewData["Title"] = "Manage Users";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Admin/User.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+}
+
+<div class="dashboard-layout dashboard-admin">
+    <aside class="dashboard-sidebar">
+        <a asp-controller="Home" asp-action="Index" class="sidebar-logo">
+            <div class="sidebar-logo-icon">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <div class="sidebar-logo-text">
+                <span class="logo-name">College Admin</span>
+                <span class="logo-sub">Admin Panel</span>
+            </div>
+        </a>
+        <div class="sidebar-user">
+            <div class="sidebar-user-avatar">A</div>
+            <div>
+                <span class="sidebar-user-name">Administrator</span>
+                <span class="sidebar-user-role">System Admin</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <span class="nav-section-label">Overview</span>
+            <a asp-controller="Dashboard" asp-action="Admin" class="nav-item">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            <span class="nav-section-label">Management</span>
+            <a asp-controller="Admin" asp-action="Users" class="nav-item active">
+                <i class="bi bi-people"></i> Users
+            </a>
+            <a asp-controller="Courses" asp-action="Index" class="nav-item">
+                <i class="bi bi-journal-bookmark"></i> Courses
+            </a>
+            <a asp-controller="Department" asp-action="Index" class="nav-item">
+                <i class="bi bi-building"></i> Departments
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a asp-controller="Account" asp-action="Logout" class="nav-item">
+                <i class="bi bi-box-arrow-left"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <main class="dashboard-main">
+        <div class="dashboard-topbar">
+            <div>
+                <h1 class="topbar-title">Manage Users</h1>
+                <p class="topbar-subtitle">View and manage university staff and student accounts.</p>
+            </div>
+            <div class="topbar-right">
+                <span class="role-badge">Admin</span>
+            </div>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success border-0 shadow-sm rounded-3 mb-4 d-flex align-items-center" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                @TempData["Success"]
+            </div>
+        }
+
+        <div class="dash-card">
+            <div class="card-head">
+                <div class="card-head-left">
+                    <div class="card-head-icon"><i class="bi bi-people-fill"></i></div>
+                    <h5>Users Directory</h5>
+                </div>
+                <span class="card-badge">@Model.Count() Total Users</span>
+            </div>
+            <div class="card-body flush">
+                <table class="dash-table">
+                    <thead>
+                        <tr>
+                            <th>User Info</th>
+                            <th>Current Role</th>
+                            <th>Change Role</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td class="td-name">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="sidebar-user-avatar" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                            @user.UserName.Substring(0, 1).ToUpper()
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">@user.UserName</div>
+                                            <div class="small text-muted" style="font-size: 0.7rem;">ID: @user.UserId.Substring(0, 8)</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @{
+                                        var roleColor = user.Role.Contains("Admin") ? "online" :
+                                        user.Role.Contains("Lecturer") ? "warning" : "offline";
+                                    }
+                                    <span class="status-pill @roleColor">
+                                        <span class="status-dot @roleColor"></span>
+                                        @user.Role
+                                    </span>
+                                </td>
+                                <td>
+                                    <form asp-action="ChangeRole" method="post" class="d-flex gap-2">
+                                        <input type="hidden" name="id" value="@user.UserId" />
+                                        <select name="newRole" class="sysstate-item py-1" style="font-size: 0.75rem; border: 1px solid #ddd;">
+                                            <option value="" disabled selected>Change to...</option>
+                                            <option value="Admin">Admin</option>
+                                            <option value="Lecturer">Lecturer</option>
+                                            <option value="Student">Student</option>
+                                        </select>
+                                        <button type="submit" class="icon-btn" style="width: 30px; height: 30px;" title="Update Role">
+                                            <i class="bi bi-check2"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a asp-action="UserDetails" asp-route-id="@user.UserId" class="icon-btn" title="View Details">
+                                            <i class="bi bi-eye text-info"></i>
+                                        </a>
+                                        <form asp-action="DeleteUser" method="post" onsubmit="return confirm('Are you sure?');">
+                                            <input type="hidden" name="id" value="@user.UserId" />
+                                            <button type="submit" class="icon-btn" title="Delete User">
+                                                <i class="bi bi-trash text-danger"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
