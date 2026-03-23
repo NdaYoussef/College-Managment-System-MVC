@@ -1,0 +1,118 @@
+﻿/* تصميم صفحة إدارة المستخدمين - Admin Users */
+
+:root {
+    --primary-blue: #2563eb;
+    --bg-body: #f8fafc;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --glass-white: rgba(255, 255, 255, 0.9);
+}
+
+body {
+    background-color: var(--bg-body);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* الحاوية الرئيسية */
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* العنوان */
+.admin-title {
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+}
+
+/* الكارت الأبيض اللي شايل الجدول */
+.card {
+    border: none;
+    border-radius: 16px; /* حواف دائرية زي الصورة */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* تنسيق الجدول */
+.admin-table thead {
+    background-color: #f1f5f9;
+}
+
+    .admin-table thead th {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        font-weight: 600;
+        padding: 15px;
+        border: none;
+    }
+
+.admin-table tbody td {
+    padding: 18px 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* الـ Badge (الصلاحية) */
+.role-badge {
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+
+/* تنسيق الـ Select (اختيار الصلاحية) */
+.form-select-sm {
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background-color: #fff;
+    transition: 0.3s;
+}
+
+    .form-select-sm:focus {
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+/* الزراير (Buttons) */
+.btn-sm {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 6px 12px;
+}
+
+.btn-outline-info {
+    color: #0891b2;
+    border-color: #0891b2;
+}
+
+    .btn-outline-info:hover {
+        background-color: #0891b2;
+        color: #fff;
+    }
+
+.btn-outline-warning {
+    color: #d97706;
+    border-color: #d97706;
+}
+
+    .btn-outline-warning:hover {
+        background-color: #d97706;
+        color: #fff;
+    }
+
+.btn-outline-danger {
+    color: #dc2626;
+    border-color: #dc2626;
+}
+
+    .btn-outline-danger:hover {
+        background-color: #dc2626;
+        color: #fff;
+    }
+
+/* تأثير عند الوقوف على الصف */
+.admin-table tbody tr:hover {
+    background-color: #fdfdfd;
+    cursor: default;
+}
